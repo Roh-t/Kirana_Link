@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchSuggestions } from "../api";
+import { getOptimizedImageUrl } from "../utils/imageUrl";
 
 /**
  * Search-as-you-type bar.
@@ -99,7 +100,13 @@ export default function SearchBar({ value, onChange, onSelectProduct }) {
               onMouseDown={() => pick(s)}
               onMouseEnter={() => setActiveIndex(i)}
             >
-              <img src={s.Image} alt="" className="suggestion-img" loading="lazy" />
+              <img
+                src={getOptimizedImageUrl(s.Image, 96)}
+                alt=""
+                className="suggestion-img"
+                loading="lazy"
+                decoding="async"
+              />
               <div className="suggestion-text">
                 <div className="suggestion-name">{s.Name}</div>
                 <div className="suggestion-meta">

@@ -1,3 +1,5 @@
+import { getOptimizedImageUrl } from "../utils/imageUrl";
+
 export default function ProductCard({ product, onEdit, onDelete, isSelected, onToggleSelect }) {
   const discount =
     product["Original Price"] && product.Price && product["Original Price"] > product.Price
@@ -8,7 +10,13 @@ export default function ProductCard({ product, onEdit, onDelete, isSelected, onT
     <div className="product-card">
       <div className="product-img-wrap">
         {product.Image ? (
-          <img src={product.Image} alt={product.Name} loading="lazy" />
+          <img
+            src={getOptimizedImageUrl(product.Image)}
+            alt={product.Name}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+          />
         ) : (
           <div className="product-img-placeholder">No Image</div>
         )}

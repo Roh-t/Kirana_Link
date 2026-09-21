@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { exportProductsToExcel } from "../utils/exportExcel";
+import { getOptimizedImageUrl } from "../utils/imageUrl";
 
 export default function SelectionPanel({ selectedItems, onRemove, onClear }) {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,12 @@ export default function SelectionPanel({ selectedItems, onRemove, onClear }) {
           <div className="selection-list-items">
             {selectedItems.map((p) => (
               <div className="selection-list-row" key={p._id}>
-                <img src={p.Image} alt="" />
+                <img
+                  src={getOptimizedImageUrl(p.Image, 96)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="selection-list-text">
                   <div className="selection-list-name">{p.Name}</div>
                   <div className="selection-list-meta">
