@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: "/api" });
+const apiBaseUrl =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? "https://kirana-link-backend.onrender.com/api" : "/api");
+
+const api = axios.create({ baseURL: apiBaseUrl });
 
 export const fetchProducts = (params, signal) =>
   api.get("/products", { params, signal }).then((r) => r.data);
