@@ -70,6 +70,7 @@ body {
 .pill.active { background: #ff6600; color: #fff; border-color: #ff6600; }
 
 .results-meta { font-size: 13px; color: #777; margin: 6px 0 12px; }
+.results-loading { color: #888; font-size: 12px; margin: -4px 0 8px; }
 
 /* --- Grid --- */
 .grid {

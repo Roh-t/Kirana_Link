@@ -61,7 +61,7 @@ export default function App() {
     debounceRef.current = setTimeout(() => {
       setPage(1);
       load(query, activeCategory, 1);
-    }, 250);
+    }, 120);
     return () => clearTimeout(debounceRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, activeCategory]);
