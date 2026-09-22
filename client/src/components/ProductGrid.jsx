@@ -36,7 +36,13 @@ export default function ProductGrid({
 
   return (
     <div className="product-results" aria-busy={loading}>
-      {loading && <div className="results-loading">Updating results...</div>}
+      {loading && (
+        <div className="results-loading" aria-live="polite">
+          <span className="loading-spinner" aria-hidden="true" />
+          Searching... {loadingSeconds > 0 ? `Waiting ${loadingSeconds}s. ` : ""}
+          Loading the latest results.
+        </div>
+      )}
       <div className="grid">
         {products.map((p) => (
           <ProductCard

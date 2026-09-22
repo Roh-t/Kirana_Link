@@ -70,7 +70,15 @@ body {
 .pill.active { background: #ff6600; color: #fff; border-color: #ff6600; }
 
 .results-meta { font-size: 13px; color: #777; margin: 6px 0 12px; }
-.results-loading { color: #888; font-size: 12px; margin: -4px 0 8px; }
+.results-loading {
+  display: flex; align-items: center; gap: 7px; color: #777; font-size: 12px;
+  margin: -4px 0 8px; min-height: 20px;
+}
+.loading-spinner {
+  width: 13px; height: 13px; border: 2px solid #ffd8bf; border-top-color: #ff6600;
+  border-radius: 50%; animation: spin .8s linear infinite; flex: 0 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* --- Grid --- */
 .grid {
