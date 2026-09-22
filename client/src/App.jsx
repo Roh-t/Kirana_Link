@@ -25,12 +25,15 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [loadingSeconds, setLoadingSeconds] = useState(0);
+  const [loadError, setLoadError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [selectedMap, setSelectedMap] = useState(loadStoredSelection); // { id: productObject }
 
   const debounceRef = useRef(null);
   const abortRef = useRef(null);
+  const loadingStartedAtRef = useRef(null);
   const LIMIT = 30;
 
   const load = useCallback(async (q, cat, pg) => {
@@ -38,6 +41,9 @@ export default function App() {
     const controller = new AbortController();
     abortRef.current = controller;
     setLoading(true);
+    setLoadError("");
+    loadingStartedAtRef.current = Date.now();
+    setLoadingSeconds(0);
     try {
       const data = await fetchProducts(
         { q, category: cat || undefined, page: pg, limit: LIMIT },
@@ -46,11 +52,30 @@ export default function App() {
       setProducts(data.items);
       setTotal(data.total);
     } catch (e) {
-      // ignore aborted
+      if (!controller.signal.aborted) {
+        setLoadError("We could not load products. Please try again.");
+      }
     } finally {
-      setLoading(false);
+      // An older request can finish after a newer request has started.
+      // Only the current request is allowed to end the loading state.
+      if (abortRef.current === controller) {
+        setLoading(false);
+        loadingStartedAtRef.current = null;
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (!loading) return undefined;
+
+    const timer = setInterval(() => {
+      if (loadingStartedAtRef.current) {
+        setLoadingSeconds(Math.floor((Date.now() - loadingStartedAtRef.current) / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [loading]);
 
   useEffect(() => {
     fetchCategories().then(setCategories).catch(() => {});
@@ -171,6 +196,8 @@ export default function App() {
       <ProductGrid
         products={products}
         loading={loading}
+        loadingSeconds={loadingSeconds}
+        loadError={loadError}
         onEdit={handleEdit}
         onDelete={handleDelete}
         selectedIds={selectedIds}

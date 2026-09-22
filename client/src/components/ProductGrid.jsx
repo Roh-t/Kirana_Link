@@ -1,14 +1,33 @@
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid({ products, loading, onEdit, onDelete, selectedIds, onToggleSelect }) {
+export default function ProductGrid({
+  products,
+  loading,
+  loadingSeconds,
+  loadError,
+  onEdit,
+  onDelete,
+  selectedIds,
+  onToggleSelect,
+}) {
   if (loading && products.length === 0) {
     return (
-      <div className="grid">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="product-card skeleton" />
-        ))}
+      <div aria-busy="true" aria-live="polite">
+        <div className="results-loading">
+          Loading products... {loadingSeconds > 0 ? `Waiting ${loadingSeconds}s. ` : ""}
+          The store may be waking up and usually opens within 30 seconds.
+        </div>
+        <div className="grid">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="product-card skeleton" />
+          ))}
+        </div>
       </div>
     );
+  }
+
+  if (loadError) {
+    return <div className="empty-state">{loadError}</div>;
   }
 
   if (!products.length) {
